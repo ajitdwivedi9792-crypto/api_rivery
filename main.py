@@ -7,7 +7,7 @@ from typing import Optional
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-API_TOKEN = os.getenv("API_TOKEN", "change-me")
+API_TOKEN = os.getenv("API_TOKEN", "IU42PtYHHqT2KxyQRQQ5xsXQFdRSgjNFYgUPeStnRTA=")
 TOTAL_RECORDS = int(os.getenv("TOTAL_RECORDS", "1000"))
 
 # account_id must match Salesforce Account Ids (18 chars) so the Logic River join works.
