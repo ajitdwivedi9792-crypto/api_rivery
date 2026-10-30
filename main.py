@@ -10,12 +10,53 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 API_TOKEN = os.getenv("API_TOKEN", "IU42PtYHHqT2KxyQRQQ5xsXQFdRSgjNFYgUPeStnRTA=")
 TOTAL_RECORDS = int(os.getenv("TOTAL_RECORDS", "1000"))
 
-# account_id must match Salesforce Account Ids (18 chars) so the Logic River join works.
-# Set ACCOUNT_IDS="001xx...,001yy..." on Render to use your real sf_account_raw ids.
+# Real Salesforce Account Ids (18 chars) so the Logic River join works.
+SF_ACCOUNT_IDS = [
+    "001g80000179bVGAAY",
+    "001g8000017BNxdAAG",
+    "001g8000017BNXpAAO",
+    "001g8000018cK6LAAU",
+    "001g8000018cK6MAAU",
+    "001g8000018cK6NAAU",
+    "001g8000018cK6OAAU",
+    "001g8000018cK6PAAU",
+    "001g8000018cK6QAAU",
+    "001g8000018cK6RAAU",
+    "001g8000018cK6SAAU",
+    "001g8000018cK6TAAU",
+    "001g8000018cK6UAAU",
+    "001g8000018dLQrAAM",
+    "001g8000018dLQsAAM",
+    "001g8000018dLQtAAM",
+    "001g8000018dLQuAAM",
+    "001g8000018dLQvAAM",
+    "001g8000018dLQwAAM",
+    "001g8000018dLQxAAM",
+    "001g8000018dLQyAAM",
+    "001g8000018dLQzAAM",
+    "001g8000018dLR0AAM",
+    "001dN000014u3d7QAA",
+    "001dN000014u3d8QAA",
+    "001dN000014u3d9QAA",
+    "001dN000014u3dAQAQ",
+    "001dN000014u3dBQAQ",
+    "001dN000014u3dCQAQ",
+    "001dN000014u3dDQAQ",
+    "001dN000014u3dEQAQ",
+    "001dN000014u3dFQAQ",
+    "001dN000014u3dGQAQ",
+    "001dN000014u3dHQAQ",
+    "001dN000014u3dIQAQ",
+    "001dN000014u3dJQAQ",
+    "001dN000014u3dKQAQ",
+    "001dN000014u3dLQAQ",
+    "001dN000014u3dMQAQ",
+    "001dN000014u3dNQAQ",
+    "001dN000014u3dOQAQ",
+]# Optional override: set ACCOUNT_IDS="id1,id2,..." on Render to use a different list.
 _env_ids = [a.strip() for a in os.getenv("ACCOUNT_IDS", "").split(",") if a.strip()]
+ACCOUNT_IDS = _env_ids or SF_ACCOUNT_IDS
 _rng = random.Random(42)  # fixed seed -> same data on every restart (stable MERGE keys)
-ALPHANUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-ACCOUNT_IDS = _env_ids or ["001" + "".join(_rng.choices(ALPHANUM, k=15)) for _ in range(25)]
 
 TYPES = ["PURCHASE", "REFUND", "SUBSCRIPTION"]
 STATUSES = ["SUCCESS", "FAILED", "PENDING"]
