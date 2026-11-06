@@ -1,6 +1,7 @@
 from typing import Optional
-
-from fastapi import Depends, FastAPI, Query
+ 
+from fastapi import Depends, FastAPI, HTTPException, Query
+from pydantic import BaseModel
 
 import customers
 import transactions
