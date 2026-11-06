@@ -24,7 +24,7 @@ def get_transactions(
     return transactions.get_transactions(page, page_size, modified_since)
 
 
-app.get("/v1/customers", dependencies=[Depends(auth)])
+@app.get("/v1/customers", dependencies=[Depends(auth)])
 def get_customers(
     page: int = Query(1, ge=1),
     page_size: int = Query(100, ge=1, le=1000),
@@ -43,6 +43,11 @@ def patch_customer(customer_id: str, body: CustomerUpdate):
     updates = body.model_dump(exclude_unset=True)
     if not updates:
         raise HTTPException(status_code=400, detail="No fields to update")
+    row = customers.update_customer(customer_id, updates)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return row
+ 
     row = customers.update_customer(customer_id, updates)
     if row is None:
         raise HTTPException(status_code=404, detail="Customer not found")
