@@ -25,6 +25,8 @@ def _build():
             "email": f"customer{n:05d}@example.com",
             "country": _rng.choice(COUNTRIES),
             "created_at": _iso(created),
+            "is_vip": False,   # updated at the end of the pipeline (reverse ETL)
+            "segment": None,   # set to "VIP" by the same PATCH call
         })
     return rows
 
