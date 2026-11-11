@@ -46,3 +46,10 @@ def get_customers(page: int, page_size: int, created_since: Optional[str] = None
         "has_more": start + page_size < len(rows),
         "data": rows[start:start + page_size],
     }
+
+def update_customer(customer_id: str, updates: dict):
+    for row in DATA:
+        if row["id"] == customer_id:
+            row.update(updates)
+            return row
+    return None
