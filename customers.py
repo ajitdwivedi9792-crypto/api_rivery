@@ -34,10 +34,23 @@ def _build():
 DATA = _build()
 
 
-def get_customers(page: int, page_size: int, created_since: Optional[str] = None):
+def get_customers(
+    page: int,
+    page_size: int,
+    created_since: Optional[str] = None,
+    country: Optional[str] = None,
+    is_vip: Optional[bool] = None,
+    segment: Optional[str] = None,
+):
     rows = DATA
     if created_since:
         rows = [r for r in rows if r["created_at"] >= created_since]
+    if country:
+        rows = [r for r in rows if r["country"].lower() == country.lower()]
+    if is_vip is not None:
+        rows = [r for r in rows if r["is_vip"] == is_vip]
+    if segment:
+        rows = [r for r in rows if r["segment"] == segment]
     start = (page - 1) * page_size
     return {
         "page": page,
@@ -46,6 +59,7 @@ def get_customers(page: int, page_size: int, created_since: Optional[str] = None
         "has_more": start + page_size < len(rows),
         "data": rows[start:start + page_size],
     }
+
 
 def update_customer(customer_id: str, updates: dict):
     for row in DATA:
