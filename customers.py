@@ -4,7 +4,7 @@ import random
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-TOTAL_CUSTOMERS = int(os.getenv("TOTAL_CUSTOMERS", "200"))
+TOTAL_CUSTOMERS = int(os.getenv("TOTAL_CUSTOMERS", "300"))
 COUNTRIES = ["United States", "United Kingdom", "Germany", "France",
              "India", "Canada", "Australia", "Japan"]
 ANCHOR = datetime(2026, 10, 30, tzinfo=timezone.utc)  # fixed so data is stable across restarts
@@ -16,17 +16,22 @@ def _iso(dt: datetime) -> str:
     return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+VIP_RATE = float(os.getenv("VIP_RATE", "0.2"))  # share of customers who start as VIP
+_vip_rng = random.Random(11)  # separate seed so existing fields don't change
+
+
 def _build():
     rows = []
     for n in range(1, TOTAL_CUSTOMERS + 1):
         created = ANCHOR - timedelta(seconds=_rng.randint(0, 730 * 86400))
+        is_vip = _vip_rng.random() < VIP_RATE
         rows.append({
             "id": f"CUST-{n:05d}",  # use these same ids in orders.customer_id
             "email": f"customer{n:05d}@example.com",
             "country": _rng.choice(COUNTRIES),
             "created_at": _iso(created),
-            "is_vip": False,   # updated at the end of the pipeline (reverse ETL)
-            "segment": None,   # set to "VIP" by the same PATCH call
+            "is_vip": is_vip,
+            "segment": "VIP" if is_vip else None,
         })
     return rows
 
